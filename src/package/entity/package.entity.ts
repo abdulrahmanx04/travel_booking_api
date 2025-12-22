@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn,Column, OneToMany, ManyToOne, JoinColumn} from "typeorm";
+import { Entity, PrimaryGeneratedColumn,Column, OneToMany, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn} from "typeorm";
 import {User} from '../../auth/entities/user.entity'
 import { Booking } from "../../booking/entities/booking.entity";
 import { PackageMedia } from "./package-media.entity";
@@ -39,15 +39,18 @@ export class Package {
   @JoinColumn({name: 'userId'})
   user: User
 
+  
+
   @OneToMany(() => Booking, (b) => b.package)
   bookings: Booking[]
 
   @OneToMany(() => PackageMedia,(p) => p.package)
   files: PackageMedia[]
 
-  @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  @CreateDateColumn()
   createdAt: Date
 
-  @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP'})
+  @UpdateDateColumn()
   updatedAt: Date
+
 }

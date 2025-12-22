@@ -1,8 +1,9 @@
 import { User } from "../../auth/entities/user.entity";
-import { Column, Entity, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Package } from "../../package/entity/package.entity";
+import { Payments } from "../../payment/entities/payment-entity";
 
-enum status {
+export enum BookingStatus {
     PENDING= 'pending',
     COMPLETED= 'completed',
     CANCELLED= 'cancelled'
@@ -26,27 +27,32 @@ export class Booking {
 
     @Column({ 
         type: 'enum',
-        enum: status,
-        default: status.PENDING
+        enum: BookingStatus,
+        default: BookingStatus.PENDING
     })
-    status: string
+    status: BookingStatus
 
     @Column('decimal', {precision: 10, scale: 2})
     price: number
 
-    @ManyToOne(() => User, (user) => user.bookings)
+    @Column()
+    userId: string
+
+    @ManyToOne(() => User, (user) => user.bookings, {onDelete: 'CASCADE'})
     @JoinColumn({name: 'userId'})
     user: User
 
+    
     @Column()
-    userId: string
+    packageId: string
+
 
     @ManyToOne(() => Package, (pkg) => pkg.bookings)
     @JoinColumn({name: 'packageId'})
     package: Package
-
-    @Column()
-    packageId: string
+   
+    @OneToMany(() => Payments, payments => payments.booking)
+    payments: Payments[]
 
     @CreateDateColumn()
     createdAt: Date;

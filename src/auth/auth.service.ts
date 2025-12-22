@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { loginDto, RegisterDto, EmailDto, VerifyOtpDto, ResetPasswordDto, ChangePasswordDto } from './dto/auth-dto';
 import crypto from 'crypto'
 import bcrypt from 'bcrypt'
-import { sendOtpEmail, sendRestPasswordEmail } from 'src/common/utils/email';
+import { sendEmail } from 'src/common/utils/email';
 import { UserData } from 'src/common/interfaces/all-interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -37,7 +37,7 @@ export class AuthService {
         
         await this.user.save(user)
 
-        await sendOtpEmail(user.email,otp)
+        await sendEmail('otp',user.email,otp)
         return {
             success: true,
             message: 'User created successfully, please enter your OTP code',
@@ -51,12 +51,12 @@ export class AuthService {
             otpExpiry: MoreThan(new Date())
         }})
         
-        user!.isVerified=true
-        user!.otp=null,
-        user!.otpExpiry=null
+        user.isVerified=true
+        user.otp=null,
+        user.otpExpiry=null
 
-        await this.user.save(user!)
-        const token= this.generateToken({id: user!.id,role: user!.role})
+        await this.user.save(user)
+        const token= this.generateToken({id: user.id,role: user.role})
 
         return {
             success: true,
@@ -72,10 +72,12 @@ export class AuthService {
             email: dto.email,
         }})
 
-       
+        if(user.isVerified === true) {
+            throw new BadRequestException('User already verified')
+        }        
 
         const otp= crypto.randomInt(0, 10 ** 6).toString().padStart(6,'0')
-        await sendOtpEmail(user.email,otp)
+        await sendEmail('otp',user.email,otp)
 
         user.otp= otp
         user.otpExpiry= new Date(Date.now() + 10 * 60 * 1000)
@@ -104,6 +106,7 @@ export class AuthService {
         return {
             success: true,
             message: 'Login successfully',
+            role: exists.role,
             token
         }
     }
@@ -121,7 +124,7 @@ export class AuthService {
 
         const url= `${process.env.FRONTEND_URL}/auth/reset-password/${token}`
 
-        await sendRestPasswordEmail(user.email,url)
+        await sendEmail('resetPassword',user.email,url)
         return {
             success: true,
             message: 'If the email exists, a reset password link has been sent.'

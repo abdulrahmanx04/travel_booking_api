@@ -13,7 +13,7 @@ import { User } from './entities/user.entity';
     PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.JWT_ACCESS,
-      signOptions: {expiresIn: '15m'}
+      signOptions: {expiresIn: '7d'}
     })
   ],
   controllers: [AuthController],

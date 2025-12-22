@@ -15,14 +15,14 @@ export class PackageController {
   constructor(private readonly packageService: PackageService) {}
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
+  @Roles('adminadmin')
   @Post('/')
   create(@Body() dto : PackageDto,@CurrentUser() userData: UserData){
     return this.packageService.create(dto,userData)
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
+  @Roles('admin')
   @UseInterceptors(FilesInterceptor('files',5))
   @Post('/files/:id')
   uploadFiles(@Param('id') id: string, @CurrentUser() userData: UserData,
@@ -41,21 +41,21 @@ export class PackageController {
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
+  @Roles('admin')
   @Put('/:id')
   update(@Param('id') id: string, @Body() dto: UpdatePackageDto, @CurrentUser() userData: UserData) {
     return this.packageService.updateOne(id,dto,userData)
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
+  @Roles('admin')
   @Delete('/:id')
   deleteOne(@Param('id') id: string,@CurrentUser() userData: UserData) {
     return this.packageService.deleteOne(id,userData)
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
+  @Roles('admin')
   @Delete('/files/:id')
   deleteFiles(@Param('id') id: string,@CurrentUser() userData: UserData) {
     return this.packageService.deleteFiles(id,userData)

@@ -49,19 +49,14 @@ export class BookingService {
            .leftJoinAndSelect('booking.package','pkg')
            .leftJoin('booking.user','user')
            .addSelect(['user.name','user.avatar','user.email'])
-           
-        if(userData.role !== 'ADMIN') {
-            queryBuilder.andWhere('booking.userId= :userId', {userId: userData.id})
-        }
-
+           .where('booking.userId= :userId', {userId: userData.id})
         if(query.search) {
             queryBuilder.andWhere(
                 'booking.customerName ILIKE :search OR booking.destination ILIKE :search OR pkg.title ILIKE :search',
                 {search: `%${query.search}%`}
             )
         }
-        
-        const bookings= await paginate(query,queryBuilder,
+        const booking= await paginate(query,queryBuilder,
             {
                 sortableColumns: ['createdAt','price','status','destination','travelDate'],
                 defaultSortBy: [['createdAt', 'DESC']],
@@ -72,36 +67,26 @@ export class BookingService {
                     packageId: [FilterOperator.EQ],
                     userId: [FilterOperator.EQ],
                 },
-                defaultLimit: 20,
+                defaultLimit: 10,
                 maxLimit: 100
             }
         )
         return {
             success: true,
-            data: bookings.data,
-            meta: {
-                page: bookings.meta.currentPage,
-                limit: bookings.meta.itemsPerPage,
-                total: bookings.meta.totalItems,
-                totalPages: bookings.meta.totalPages
-            }
+            data: booking.data,
+            meta: booking.meta
         }
         
     }
 
     async getOne(id: string, userData: UserData) {
-        const query= await this.booking
+        const query= this.booking
             .createQueryBuilder('booking')
             .leftJoinAndSelect('booking.package','pkg')
             .leftJoin('booking.user','user')
             .addSelect(['user.id', 'user.name','user.avatar'])
+            .where('booking.userId= :userId AND booking.id= :id', {userId: userData.id, id})
         
-        if(userData.role === 'ADMIN') {
-            query.where('booking.id= :id', {id})
-        }  else {
-             query.where('booking.id= :id AND booking.userId= :userId', {id,userId: userData.id})
-        }
-
         const book= await query.getOneOrFail()
 
         return {
@@ -111,53 +96,29 @@ export class BookingService {
     }
 
     async updateOne(id: string, dto: UpdateBookingDto, userData: UserData) {
-        const query= this.booking
-            .createQueryBuilder('booking')
-            .leftJoinAndSelect('booking.package','pkg')
-            .leftJoin('booking.user', 'user')
-            .addSelect(['user.name','user.avatar'])
+        const booking= await this.booking.findOneOrFail({
+            where: {
+                id,
+                userId: userData.id
+            }
+        })
 
-
-        if(userData.role !== 'ADMIN') {
-            delete dto.packageId
-            delete dto.price
-            delete dto.status
-            query.andWhere('booking.id= :id AND booking.userId= :userId',{id,userId: userData.id})
-        } else {
-            query.andWhere('booking.id= :id', {id})
-        }
-
-        const booking= await query.getOneOrFail()
-
-        if(dto.packageId) {
-            const pkg= await this.pkg.findOneOrFail({where: {id: dto.packageId}})
-            booking.package=pkg
-            booking.packageId = pkg.id;
-        }
-
-        const {packageId, ...otherFields} = dto
-
-        Object.assign(booking,otherFields)
-
-        await this.booking.save(booking);
-
+        Object.assign(booking,dto)
         return {
             success: true,
             message: 'Booking updated successfully',
             data: booking
         }
     }
+    
     async deleteOne(id: string, userData: UserData) {
         const booking= await this.booking.findOneOrFail({where: {id,
             ...(userData.role !== 'ADMIN' && {userId: userData.id})
         }})
 
-        if(userData.role !== 'ADMIN') {
-            if(booking.status !== 'pending') {
+        if(booking.status !== 'pending') {
                 throw new BadRequestException('Only pending bookings can be deleted')
-            }
         }
-
         await this.booking.delete({id})
 
         return {

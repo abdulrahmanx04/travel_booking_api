@@ -15,8 +15,7 @@ export class RegisterDto {
 
     @IsNotEmpty()
     @IsString()
-    @MinLength(3)
-    @MaxLength(30)
+    @Length(3,30)
     name: string
 
     @IsOptional()

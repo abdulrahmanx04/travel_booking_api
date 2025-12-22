@@ -1,4 +1,5 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from "class-validator";
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from "class-validator";
+import { BookingStatus } from "../entities/booking.entity";
 
 
 
@@ -37,19 +38,6 @@ export class UpdateBookingDto {
     @IsNumber()
     @Min(1)
     guestCount?: number
-
-    @IsOptional()
-    @IsUUID()
-    packageId?: string
-
-    @IsOptional()
-    @IsNumber({maxDecimalPlaces: 2})
-    price?: number
-
-    @IsOptional()
-    @IsString()
-    status?: string
-
     
     @IsOptional()
     @IsString()

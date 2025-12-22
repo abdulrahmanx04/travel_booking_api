@@ -10,6 +10,10 @@ import { Booking } from './booking/entities/booking.entity';
 import { Package } from './package/entity/package.entity';
 import { ConfigModule } from '@nestjs/config';
 import { PackageMedia } from './package/entity/package-media.entity';
+import { PaymentModule } from './payment/payment.module';
+import { Payments } from './payment/entities/payment-entity';
+import { StripeModule } from './stripe/stripe.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [ 
@@ -18,12 +22,12 @@ import { PackageMedia } from './package/entity/package-media.entity';
         type: 'postgres',
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT ?? '5432'),
-        username: process.env.DB_USER,
+        username: process.env.DB_USER,  
         password: process.env.DB_PASS,
         database: process.env.DB_DATABASE,
-        entities: [User,Package,PackageMedia,Booking],
+        entities: [User,Package,PackageMedia,Booking,Payments],
         synchronize: true,
-      }),AuthModule, UserModule, PackageModule, BookingModule, CloudinaryModule],
+      }),AuthModule, UserModule, PackageModule, BookingModule, CloudinaryModule, PaymentModule, StripeModule, AdminModule],
   providers: [],
 })
 export class AppModule {}

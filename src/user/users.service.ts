@@ -3,7 +3,7 @@ import { UserData } from 'src/common/interfaces/all-interfaces';
 import { UpdateProfileDto } from './dto/profile-dto';
 import crypto from 'crypto'
 import bcrypt from 'bcrypt'
-import { sendOtpEmail } from 'src/common/utils/email';
+import { sendEmail } from 'src/common/utils/email';
 import { PasswordDto } from 'src/auth/dto/auth-dto';
 import { UploadApiResponse } from 'cloudinary';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
@@ -59,7 +59,7 @@ export class UserService {
                 throw new BadRequestException('Email already used')
             }
             const otp= crypto.randomInt(0,10**6).toString().padStart(6,'0')
-            await sendOtpEmail(dto.email,otp)
+            await sendEmail('otp',dto.email,otp)
         }
         
         Object.keys(dto).forEach((key) => {

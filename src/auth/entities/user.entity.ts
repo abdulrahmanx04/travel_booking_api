@@ -2,10 +2,11 @@ import { Booking } from "../../booking/entities/booking.entity";
 import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Package } from "../../package/entity/package.entity";
 import bcrypt from 'bcrypt'
+import { Payments } from "src/payment/entities/payment-entity";
 
 export enum Role {
-    USER=  'USER',
-    ADMIN= 'ADMIN'
+    USER=  'user',
+    ADMIN= 'admin'
 }
 
 @Entity('users')
@@ -65,6 +66,9 @@ export class User {
 
     @OneToMany(() => Booking, (booking) => booking.user)
     bookings: Booking[]
+
+    @OneToMany(() => Payments, (payments) => payments.user)
+    payments: Payments[]
 
     @OneToMany(() => Package,(p) => p.user)
     packages: Package[]

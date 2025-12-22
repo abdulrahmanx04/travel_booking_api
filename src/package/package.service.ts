@@ -81,14 +81,9 @@ export class PackageService {
             maxLimit: 100,
         })
         return {
+            success: true,
             data: packages.data,
-            meta: {
-                page: packages.meta.currentPage,
-                limit: packages.meta.itemsPerPage,
-                total: packages.meta.totalItems,
-                totalPages: packages.meta.totalPages,
-            }
-
+            meta: packages.meta
         }
     }
 
@@ -150,7 +145,6 @@ export class PackageService {
         if(existingPackage.files.length > 0) {
             for (const file of existingPackage.files) {
                 if(!file.public_id) {
-                    console.warn(`Skipping file ${file.id} — missing public_id`);
                     continue;
                 }
                 const result= await this.cloudinaryService.deleteFile(file.public_id,file.fileType)
