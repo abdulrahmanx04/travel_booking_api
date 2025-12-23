@@ -33,8 +33,8 @@ export class TypOrmExceptionFilter implements ExceptionFilter {
         const ctx= host.switchToHttp()
         const response= ctx.getResponse()
         let status = HttpStatus.INTERNAL_SERVER_ERROR
-        let message: string='Database query error occured'
-        let error= 'DatabaseQuery'
+        let message ='Database query error occured' 
+        let error= 'DatabaseQuery' 
         if(exception instanceof QueryFailedError) {
             const err= exception as any
             const errorType= this.errorTypes[err.code]

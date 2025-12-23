@@ -9,18 +9,21 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import type { PaginateQuery } from 'nestjs-paginate';
 import { Paginate } from 'nestjs-paginate';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('packages')
 export class PackageController {
   constructor(private readonly packageService: PackageService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('adminadmin')
+  @Roles('admin')
   @Post('/')
   create(@Body() dto : PackageDto,@CurrentUser() userData: UserData){
     return this.packageService.create(dto,userData)
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Roles('admin')
   @UseInterceptors(FilesInterceptor('files',5))

@@ -8,11 +8,14 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Paginate} from 'nestjs-paginate';
 import type { PaginateQuery } from 'nestjs-paginate';
+import { Throttle } from '@nestjs/throttler';
+
 @Controller('payments')
 @UseGuards(JwtAuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('/')
   createPayment(@Body() dto: CreatePaymentDto, @CurrentUser() userData: UserData) {
     return this.paymentService.createPayment(dto,userData)

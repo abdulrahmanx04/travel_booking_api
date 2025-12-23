@@ -96,6 +96,10 @@ export class PackageService {
     }
 
     async updateOne(id: string,dto: UpdatePackageDto,userData: UserData) {
+        
+        if(!Object.values(dto).some(value => value !== undefined && value !== null)) {
+            throw new BadRequestException('Nothing to update')
+        }
         const existingPackage= await this.userPackage.findOneOrFail({where: {id}})
 
         Object.keys(dto).forEach((key) => {

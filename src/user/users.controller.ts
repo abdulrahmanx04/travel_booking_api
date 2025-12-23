@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/common/guards/AuthGuard';
 import { UpdateProfileDto } from './dto/profile-dto';
 import { PasswordDto } from 'src/auth/dto/auth-dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('users')
 export class UserController {
@@ -17,6 +18,7 @@ export class UserController {
     return this.userService.findOne(userData)
   }
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('avatar'))
   @Put('/me')

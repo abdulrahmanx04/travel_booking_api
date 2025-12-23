@@ -4,14 +4,6 @@ import { FilterOperator, paginate, Paginated, PaginateQuery } from "nestjs-pagin
 import { Payments } from "src/payment/entities/payment-entity";
 import { Repository } from "typeorm";
 
-
-
-
-
-
-
-
-
 @Injectable()
 export class AdminPaymentService {
     constructor(@InjectRepository(Payments) private paymentRepository: Repository<Payments>) {}

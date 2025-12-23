@@ -96,6 +96,10 @@ export class BookingService {
     }
 
     async updateOne(id: string, dto: UpdateBookingDto, userData: UserData) {
+
+        if(!Object.values(dto).some(value => value !== undefined && value !== null)) {
+            throw new BadRequestException('Nothing to update')
+        }
         const booking= await this.booking.findOneOrFail({
             where: {
                 id,
@@ -103,7 +107,8 @@ export class BookingService {
             }
         })
 
-        Object.assign(booking,dto)
+        this.booking.merge(booking,dto)
+        await this.booking.save(booking)
         return {
             success: true,
             message: 'Booking updated successfully',

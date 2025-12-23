@@ -6,12 +6,14 @@ import type { UserData } from 'src/common/interfaces/all-interfaces';
 import { JwtAuthGuard } from 'src/common/guards/AuthGuard';
 import { Paginate } from 'nestjs-paginate';
 import type { PaginateQuery } from 'nestjs-paginate';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('booking')
 @UseGuards(JwtAuthGuard)
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('/')
   create(@Body() dto: CreateBookDto, @CurrentUser() userData: UserData) {
     return this.bookingService.create(dto,userData)
