@@ -11,6 +11,7 @@ import { AdminBookingDto } from './booking/admin-booking-dto';
 import { AdminUserService } from './users/admin-users.service';
 import { AdminUpdateUserDto } from './users/admin-users.dto';
 import { AdminPaymentService } from './payments/admin-payments.service';
+import { AdminDashboardService } from './dashbord/admin-dashbord.service';
 
 @Controller('admin')
 @Roles('admin')
@@ -18,7 +19,8 @@ import { AdminPaymentService } from './payments/admin-payments.service';
 export class AdminController {
   constructor(private readonly adminBookingService: AdminBookingService,
     private readonly adminUserService: AdminUserService,
-    private readonly adminPaymentService: AdminPaymentService
+    private readonly adminPaymentService: AdminPaymentService,
+    private readonly adminDashboardService: AdminDashboardService
   ) {}
 
   @Get('/bookings')
@@ -60,6 +62,11 @@ export class AdminController {
   @Get('/payments/:id')
   async getOnePayment(@Param('id') id: string) {
     return this.adminPaymentService.getOne(id)
+  }
+
+  @Get('/dashboard')
+  async getStats() {
+    return this.adminDashboardService.getStats()
   }
 
 }

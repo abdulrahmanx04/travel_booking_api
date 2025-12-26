@@ -1,98 +1,306 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Travel Booking Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive NestJS-based travel booking application with user authentication, package management, booking system, and integrated payment processing via Stripe.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🛠️ Tech Stack
 
-## Description
+### Core Framework
+- **NestJS** - Progressive Node.js framework
+- **TypeScript** - Type-safe development
+- **TypeORM** - Database ORM
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Database
+- **PostgreSQL** - Primary database
 
-## Project setup
+### Authentication & Security
+- **JWT (jsonwebtoken)** - Token-based authentication
+- **Passport** - Authentication middleware
+- **bcrypt** - Password hashing
+- **Helmet** - HTTP security headers
+- **Throttler** - Rate limiting
 
-```bash
-$ npm install
+### External Services
+- **Stripe** - Payment processing
+- **Cloudinary** - File storage and management
+- **Nodemailer** - Email notifications (Mailtrap)
+
+### Utilities
+- **nestjs-paginate** - Pagination support
+- **class-validator** - DTO validation
+- **crypto** - Cryptographic operations
+
+## 📋 Overview
+
+This is a full-featured travel booking platform that allows users to browse travel packages, create bookings, process payments, and manage their profiles. Admins can manage packages, view bookings, and process refunds.
+
+## 🎯 Key Features
+
+### Authentication & User Management
+- User registration with OTP email verification
+- JWT-based authentication
+- Password reset functionality
+- User profile management with avatar upload
+- Role-based access control (USER, ADMIN)
+
+### Travel Packages
+- Create and manage travel packages (Admin only)
+- Upload multiple media files (images/PDFs) for packages
+- View all packages with pagination
+- Detailed package information including destination, price, duration, dates
+
+### Booking System
+- Create bookings for available packages
+- View all user bookings with pagination
+- Update booking details
+- Delete bookings
+- Track booking status (pending, confirmed, cancelled)
+- Rate limiting to prevent abuse
+
+### Payment Processing
+- Stripe integration for secure payments
+- Create checkout sessions
+- Process refunds
+- Webhook support for payment events
+- Payment status tracking
+
+### Admin Features
+- Admin dashboard for payments
+- View payment details with associated booking and user information
+- Manage user bookings and packages
+
+### File Management
+- Cloudinary integration for image/file uploads
+- Support for multiple file types (JPEG, PNG, WEBP, PDF)
+- File deletion with cleanup
+
+## 📁 Project Structure
+
+```
+src/
+├── app.module.ts                 # Main application module
+├── main.ts                       # Application entry point
+├── auth/                         # Authentication module
+│   ├── auth.service.ts          # Auth business logic
+│   ├── auth.controller.ts       # Auth endpoints
+│   ├── dto/                     # Data transfer objects
+│   └── entities/                # User entity
+├── user/                         # User management module
+│   ├── users.service.ts         # User operations
+│   ├── users.controller.ts      # User endpoints
+│   └── dto/                     # User DTOs
+├── booking/                      # Booking module
+│   ├── booking.service.ts       # Booking logic
+│   ├── booking.controller.ts    # Booking endpoints
+│   ├── dto/                     # Booking DTOs
+│   └── entities/                # Booking entity
+├── package/                      # Package management module
+│   ├── package.service.ts       # Package operations
+│   ├── package.controller.ts    # Package endpoints
+│   ├── dto/                     # Package DTOs
+│   ├── entity/                  # Package entities
+│   └── package-media.entity.ts  # Media files entity
+├── payment/                      # Payment module
+│   ├── payment.service.ts       # Payment processing
+│   ├── payment.controller.ts    # Payment endpoints
+│   └── entities/                # Payment entity
+├── stripe/                       # Stripe integration
+│   ├── stripe.service.ts        # Stripe operations
+│   └── stripe.module.ts         # Stripe module
+├── admin/                        # Admin features
+│   ├── payments/                # Admin payment management
+│   ├── bookings/                # Admin booking management
+│   └── users/                   # Admin user management
+├── cloudinary/                   # File upload service
+│   ├── cloudinary.service.ts    # Upload/delete operations
+│   ├── cloudinary.config.ts     # Cloudinary configuration
+│   └── cloudinary.module.ts     # Cloudinary module
+├── common/                       # Shared utilities
+│   ├── guards/                  # Auth guards
+│   ├── decorators/              # Custom decorators
+│   ├── filters/                 # Exception filters
+│   ├── interfaces/              # Shared interfaces
+│   └── utils/                   # Email utilities
+└── generated/                    # Generated types
 ```
 
-## Compile and run the project
+## 🚀 Getting Started
 
+### Prerequisites
+- Node.js (v16+)
+- PostgreSQL
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <repository-url>
+cd travelbooking
 ```
 
-## Run tests
-
+2. **Install dependencies**
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+3. **Environment Setup**
+Create a `.env` file with the following variables:
+```env
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=password
+DB_DATABASE=travelbooking
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# JWT
+JWT_SECRET=your_jwt_secret
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+# Stripe
+STRIPE_SECRET_KEY=sk_test_xxx
+STRIPE_WEBHOOK_SECRET=whsec_xxx
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Cloudinary
+CLOUD_NAME=your_cloud_name
+API_KEY=your_api_key
+API_SECRET=your_api_secret
+
+# Email (Mailtrap)
+MAILTRAP_USER=your_mailtrap_user
+MAILTRAP_PASS=your_mailtrap_password
+
+# Application
+PORT=3000
+FRONTEND_URL=http://localhost:3000
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+4. **Run the application**
+```bash
+# Development
+npm run start:dev
 
-## Resources
+# Production
+npm run build
+npm run start:prod
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📚 API Endpoints
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login user
+- `POST /auth/verify-otp` - Verify OTP
+- `POST /auth/forgot-password` - Request password reset
+- `POST /auth/reset-password` - Reset password
+- `POST /auth/change-password` - Change password (authenticated)
 
-## Support
+### Users
+- `GET /users/me` - Get current user profile (authenticated)
+- `PUT /users/me` - Update user profile (authenticated)
+- `DELETE /users/me` - Delete user account (authenticated)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Packages
+- `GET /packages` - Get all packages
+- `GET /packages/:id` - Get package details
+- `POST /packages` - Create package (Admin only)
+- `POST /packages/files/:id` - Upload package media (Admin only)
+- `PUT /packages/:id` - Update package (Admin only)
+- `DELETE /packages/:id` - Delete package (Admin only)
+- `DELETE /packages/files/:mediaId` - Delete media file (Admin only)
 
-## Stay in touch
+### Bookings
+- `GET /booking` - Get user bookings (authenticated)
+- `GET /booking/:id` - Get booking details (authenticated)
+- `POST /booking` - Create booking (authenticated)
+- `PUT /booking/:id` - Update booking (authenticated)
+- `DELETE /booking/:id` - Cancel booking (authenticated)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Payments
+- `POST /payment/checkout` - Create Stripe checkout session (authenticated)
+- `GET /payment/:bookingId` - Get payment details (authenticated)
+- `POST /payment/refund` - Request refund (authenticated)
+- `POST /payment/webhook` - Stripe webhook endpoint
 
-## License
+## 🔐 Security Features
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- JWT authentication with role-based access control
+- Password hashing with bcrypt
+- Rate limiting (100 requests per minute globally)
+- HTTP security headers with Helmet
+- CORS protection
+- Input validation with class-validator
+- Exception handling and logging
+
+## 📦 Database Schema
+
+### User
+- User authentication and profile information
+- Role-based access (USER, ADMIN)
+- OTP verification for email
+- Password reset tokens
+
+### Package
+- Travel package details
+- Pricing and duration
+- Start and end dates
+- Associated media files
+
+### Booking
+- User bookings for packages
+- Booking status tracking
+- Travel date and guest count
+- Price information
+
+### Payment
+- Payment transactions
+- Stripe integration
+- Payment status tracking
+- Refund management
+
+### PackageMedia
+- Media files for packages
+- File URLs and metadata
+- Cloudinary public IDs
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## 📝 Scripts
+
+```bash
+npm run build        # Build for production
+npm run start        # Start production server
+npm run start:dev    # Start development server with auto-reload
+npm run start:debug  # Start with debugging enabled
+npm run lint         # Run ESLint
+npm run format       # Format code with Prettier
+```
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Commit your changes
+3. Push to the branch
+4. Open a pull request
+
+## 📄 License
+
+This project is licensed under the UNLICENSED license.
+
+## 📧 Support
+
+For support, please reach out to the development team or check the [NestJS Documentation](https://docs.nestjs.com).
+
+---
+
+Built with ❤️ using NestJS

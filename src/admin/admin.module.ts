@@ -8,10 +8,11 @@ import { Payments } from 'src/payment/entities/payment-entity';
 import { Package } from 'src/package/entity/package.entity';
 import { AdminUserService } from './users/admin-users.service';
 import { AdminPaymentService } from './payments/admin-payments.service';
+import { AdminDashboardService } from './dashbord/admin-dashbord.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User,Booking,Payments,Package])],
   controllers: [AdminController],
-  providers: [AdminBookingService,AdminUserService,AdminPaymentService],
+  providers: [AdminBookingService,AdminUserService,AdminPaymentService,AdminDashboardService],
 })
 export class AdminModule {}
