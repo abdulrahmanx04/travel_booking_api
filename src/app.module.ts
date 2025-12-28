@@ -28,7 +28,7 @@ import { APP_GUARD } from '@nestjs/core';
         password: process.env.DB_PASS,
         database: process.env.DB_DATABASE,
         entities: [User,Package,PackageMedia,Booking,Payments],
-        synchronize: true,
+        synchronize: false,
       }),
       ThrottlerModule.forRoot([
         {
